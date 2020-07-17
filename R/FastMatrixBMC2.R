@@ -41,7 +41,7 @@ fast_det <- function(FM, phi=NULL, tau=NULL, log=TRUE){
 #' @export
 fast_inv.FM_fast <- function(FM, phi=NULL, tau=NULL){
   phi <- ifelse(length(phi) > 0, phi, FM$phi)
-  tau <- ifelse(length(tau) > 0, phi, FM$tau)
+  tau <- ifelse(length(tau) > 0, tau, FM$tau)
   if(is.null(phi) || is.null(tau)){
     stop('Could not find phi and/or tau')
   }
@@ -73,7 +73,7 @@ fast_inv.FM_fast <- function(FM, phi=NULL, tau=NULL){
 #' @export
 fast_inv.FM_approx <- function(FM, phi=NULL, tau=NULL){
   phi <- ifelse(length(phi) > 0, phi, FM$phi)
-  tau <- ifelse(length(tau) > 0, phi, FM$tau)
+  tau <- ifelse(length(tau) > 0, tau, FM$tau)
   if(is.null(phi) || is.null(tau)){
     stop('Could not find phi and/or tau')
   }
