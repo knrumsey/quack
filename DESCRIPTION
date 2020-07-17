@@ -1,0 +1,29 @@
+Package: quack
+Title: Methods for Quantification of Uncertainty and Calibration for Physical Parameters
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Kellin",
+           family = "Rumsey",
+           role = c("aut", "cre"),
+           email = "knrumsey@unm.edu",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Functions for efficient and robust UQ.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to
+    pick a license
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+Imports:
+    RANN,
+    laGP,
+    lhs,
+    MHadaptive,
+    rootSolve
+    
+    
+    
