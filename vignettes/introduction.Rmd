@@ -1,5 +1,5 @@
 ---
-title: "introduction"
+title: "The QUACK Package: Tools for Quantification of Uncertainty and Calibration "
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{introduction}
@@ -17,3 +17,69 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(quack)
 ```
+
+
+
+### 1. The Moment Penalization Prior
+
+The Moment Penalization prior is a diagnostic tool for assessing overfitting in Bayesian models with random effects having a partially known distribution (usually Gaussian with fixed variance). Draws from this distribution can be obtained using the `rMP` function. 
+
+```{R }
+x <- rMP(300, p=2, w1=10, w2=10)
+plot(x)
+```
+
+The density function can be evaluated using `dMP`. Since the normalization constant must be approximated with Monte Carlo (using `get_constMP`), the `normalized` boolean defaults to `FALSE` to avoid this computation. If `normalized = TRUE`, the number of MC replications can be set using the `MC` argument. 
+
+```{R}
+dMP(x[1,], w1=10, w2=10)
+dMP(x[1,], w1=10, w2=10, normalized=TRUE) #Default MC=1e7
+dMP(x[1,], w1=10, w2=10, normalized=TRUE, MC=1e6)
+```
+
+## 2. Local GP Emulators for Sequential Prediction: LEAP-GP and SLAP-GP
+
+The `quack` package provides an implementation of the LEAP and SLAP GP emulators, which are modifications of the LA-GP framework which are more efficient for sequential prediction (i.e. settings where parallelization is not possible). For instance, we consider the `volcano` data which includes $5307$ obsrvations of the elevation of the Maunga Whau volcano, measured on a 10m by 10m grid. 
+
+```{R, fig.height=6, fig.width=7}
+X <- expand.grid(x1=seq(0,1,length.out=87), x2=seq(0,1,length.out=61))
+y <- unlist(volcano)
+XX <- expand.grid(x1=seq(0,1,length.out=20), x2=seq(0,1,length.out=20)) #Prediction set - not known in advance
+
+leap <- leapGP_build(X, y)
+
+#Prediction locations arrive in-situ
+yhat1 <- rep(NA, 400)
+for(i in 1:400){
+  yhat1[i] <- leapGP_predict(leap, XX[i,])
+}
+
+#Combine LEAP and SLAP-GP
+yhat2 <- rep(NA, 400)
+leap <- leapGP_synch(leap, rho=0.95)
+hubs <- leap$hubs
+for(i in 1:400){
+  slap <- slapGP(XX[i,], X, y, hubs=hubs)
+  hubs <- slap$hubs
+  yhat2[i] <- slap$pred
+}
+
+#Rearrange data
+yhat1_mat <- yhat2_mat <- matrix(NA, nrow=20, ncol=20)
+cnt <- 1
+for(i in 1:20){
+  for(j in 1:20){
+    yhat1_mat[i,j] <- yhat1[cnt]
+    yhat2_mat[i,j] <- yhat2[cnt]
+    cnt <- cnt + 1
+  }
+}
+
+#Make plots
+par(mfrow=c(1,3))
+contour(volcano, main="Volcano Data")
+contour(t(yhat1_mat), main="LEAP-GP Predictions")
+contour(t(yhat2_mat), main="SLAP-GP Predictions")
+```
+
+
