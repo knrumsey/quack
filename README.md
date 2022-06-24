@@ -18,7 +18,7 @@ devtools::install_github("knrumsey/quack")
 Tools
 -----
 
-See help files for more details.
+See [manual](https://github.com/knrumsey/quack/blob/master/quack_0.0.0.9000.pdf) for details.
 
 -   [**Moment penalization**](https://epubs.siam.org/doi/pdf/10.1137/19M1283707?casa_token=javZzkQnG4oAAAAA:NqF-i_Wpuz5I8j0IHYK-j-q4QzoJr04ohxO1PBMHLwKE640bTAD1MsalHKtFBu1-VTsuu4sR): functions for the moment penalization (MP) prior, which are useful for improving identifiability and reducing bias when a physical system contains a set of nuisance parameters which can be viewed as iid samples from a specified distribution. Also contains methods for computing the probability of prior coherency, a useful diagnostic tool.
 -   **Emulating the conditional posterior**: A fast approach for approximating the [cut distribution](https://idp.springer.com/authorize/casa?redirect_uri=https://link.springer.com/article/10.1007/s11222-014-9503-z&casa_token=K78vRWO3qrQAAAAA:12SChC4sxODP5fp0NYdGSQ-1YybCxPndiT6JZb_NXdKtVlf3-eRa87JvfULTvZs1D30yMOJkWZfOpdQ) in low to moderate dimensions.
