@@ -60,7 +60,7 @@ leapGP_build <- function(X, Y, H=NA,
   }
 
   if(H < N){
-    if(N < 5000 | justdoit){
+    if(N <= 5000 | justdoit){
       #Use PAM to find medoids
       coord_ind <- cluster::pam(X, H, pamonce=5)$id.med
     }else{
