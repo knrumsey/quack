@@ -25,7 +25,7 @@ get_input_length(function_name)
 \arguments{
 \item{x}{a vector in inputs. type get_input_length("function_name") to get the minimum requirement for length(x)}
 
-\item{scale01}{default TRUE. Expects inputs on \link{0,1} space. When FALSE, inputs are expected in there natural ranges}
+\item{scale01}{default TRUE. Expects inputs on \link{0,1} space. When FALSE, inputs are expected in their natural ranges}
 }
 \description{
 Some general testing functions for UQ
@@ -35,7 +35,7 @@ List of functions and details
 \enumerate{
 \item borehole
 \item \href{https://www.sfu.ca/~ssurjano/limetal02pol.html}{lim}
-\item (gramacy_lee)\link{https://www.sfu.ca/~ssurjano/grlee08.html}
+\item \href{https://www.sfu.ca/~ssurjano/grlee08.html}{gramacy_lee}
 \item synth_3level
 }
 }

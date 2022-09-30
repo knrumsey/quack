@@ -45,6 +45,7 @@ slapGP <- function(Xnew, X, Y, rho=0.95, hubs=list(),
     #Matrix of hub locations
     H <- matrix(unlist(lapply(hubs, function(h) h$coord)), nrow=length(hubs), byrow=TRUE)
     #Find nearest hub using kd-tree
+    #browser()
     NH <- RANN::nn2(H, matrix(Xnew, nrow=1), k=1)
     curr_hub <- hubs[[NH$nn.idx]]
     #Is hub close enough to make a prediction?
