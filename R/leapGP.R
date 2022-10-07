@@ -98,7 +98,7 @@ leapGP_build <- function(X, Y, H=NA,
     hubs[[hh]] <- new_hub
     if(verbose){
       if((hh %% ((H - H%%10)/10)) == 0){
-        cat('a dime towards a dollar\n')
+        cat('10%\n')
       }
     }
   }
