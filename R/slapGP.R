@@ -14,6 +14,7 @@
 #' @param iso logical. Is correlation function isotropic? (Currently not supported)
 #' @param n local neighborhood size
 #' @param start number of starting points for neighborhood (between 6 and n inclusive)
+#' @param H_max the maximum number of hubs allowed (used to upper bound the run time)
 #' @param ... optional arguments to be passed to laGP()
 #' @return a univariate prediction and an updated list of hubs. Also returns scale parameter if scale=TRUE
 #' @examples
@@ -30,7 +31,7 @@
 #' }
 #' @export
 slapGP <- function(Xnew, X, Y, rho=0.95, hubs=list(),
-                   scale=F, iso=TRUE, n=NA, start=NA, ...){
+                   scale=F, iso=TRUE, n=NA, start=NA, H_max=Inf, ...){
   #Get parameters
   N <- length(Y)
   if(is.na(n)){
@@ -46,10 +47,12 @@ slapGP <- function(Xnew, X, Y, rho=0.95, hubs=list(),
     H <- matrix(unlist(lapply(hubs, function(h) h$coord)), nrow=length(hubs), byrow=TRUE)
     #Find nearest hub using kd-tree
     #browser()
-    NH <- RANN::nn2(H, matrix(Xnew, nrow=1), k=1)
+    NH <- RANN::nn2(H, matrix(Xnew, nrow=1), k=1,
+                    searchtype = ifelse(nrow(H) < 100, "standard", "priority"), eps = 0.025*floor(nrow(H/100)))
     curr_hub <- hubs[[NH$nn.idx]]
     #Is hub close enough to make a prediction?
-    if(NH$nn.dists < curr_hub$epsilon){
+    #alternatively, are we already at the maximum number of hubs
+    if(NH$nn.dists < curr_hub$epsilon | nrow(H) >= H_max){
       #Make prediction and return hubs unmodified
       kvec <- rep(NA, n)
       for(i in 1:n){

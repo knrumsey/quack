@@ -65,7 +65,7 @@ leapGP_build <- function(X, Y, H=NA,
       coord_ind <- cluster::pam(X, H, pamonce=5)$id.med
     }else{
       warning('N is very large, a subset of 5000 points was used. Set justdoit=TRUE to override.')
-      rand_ind <- sample(N,5001)
+      rand_ind <- sample(N,5000)
       coord_ind <- rand_ind[cluster::pam(X[rand_ind,], H, pamonce=5)$id.med]
     }
   }else{
