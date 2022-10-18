@@ -78,7 +78,7 @@ ggsummary <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
   )
 
   # Rename the "mean" column
-  datac <- plyr::rename(datac, c("mean" = measurevar))
+  #datac <- plyr::rename(datac, c("mean" = measurevar))
 
   datac$se <- datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
 
