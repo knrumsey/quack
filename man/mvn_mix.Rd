@@ -10,7 +10,7 @@ mvn_mix(
   kappa = 0.75,
   epsilon = 1e-05,
   max_iter = 2000,
-  verbose = FALSE,
+  verbose = TRUE,
   print_iter = 10,
   crit = NULL,
   minibatch = nrow(X)
@@ -21,7 +21,7 @@ mvn_mix(
 
 \item{K}{a vector (or scalar for a single fit) of}
 
-\item{kappa}{Regularization parameter. Each Sigma is shrank towards Sx at iteration t with weight 1/t^kappa}
+\item{kappa}{Regularization parameter. Each Sigma is shrank towards Sx weight 1/nrow(X)^kappa}
 
 \item{epsilon}{stopping criterion for EM algorithm}
 
@@ -33,7 +33,7 @@ mvn_mix(
 
 \item{crit}{a subset of c("aic", "bic", "hqic") corresponding to Aikike's, Bayesian and Hanaan-Quinn information criteria.}
 
-\item{minibatch}{for stochastic udpating. epsilon should be set to -Inf.}
+\item{minibatch}{WARNING: This doesn't seem to work right now. For stochastic udpating. epsilon should be set to -Inf.}
 }
 \value{
 a list with components corresponding to the fit using the number of components specified by \code{K}

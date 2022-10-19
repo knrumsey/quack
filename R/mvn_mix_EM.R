@@ -10,7 +10,7 @@
 #' @param verbose should information on status be printed
 #' @param print_iter how often should information being printed? Ignored when verbose=FALSE.
 #' @param crit a subset of c("aic", "bic", "hqic") corresponding to Aikike's, Bayesian and Hanaan-Quinn information criteria.
-#' @param minibatch for stochastic udpating. epsilon should be set to -Inf.
+#' @param minibatch WARNING: This doesn't seem to work right now. For stochastic udpating. epsilon should be set to -Inf.
 #' @return a list with components corresponding to the fit using the number of components specified by `K`
 #' @details A regularized approach based loosely on Chi & Lange (2014).
 #'
@@ -37,7 +37,7 @@
 #' lines(1:3, obj$hqic, col="firebrick")
 #' legend("bottomleft", c("aic", "bic", "hqic"), lwd=2, col=c("orange", "dodgerblue", "firebrick"))
 #' @export
-mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=FALSE, print_iter = 10, crit=NULL,
+mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=TRUE, print_iter = 10, crit=NULL,
                     minibatch=nrow(X)){
   if(length(epsilon) == 1){
     epsilon <- rep(epsilon, length(K))
@@ -50,9 +50,11 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
       warning("Stochastic EM algorithm with minibatching ignores epsilon. Set epsilon = -Inf to ignore this message")
       epsilon <- rep(-Inf, length(K))
     }
+    warning("Minibatch version of EM does not seem to work at this point. ")
   }
 
   out <- list()
+  cnt <- 1
   for(k in K){
     if(verbose){
       cat("Number of components:", k)
@@ -76,6 +78,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
     tol <- Inf
     log_lik <- rep(NA, max_iter)
     eps0 <- epsilon[which(K==k)]
+
     while(tol > eps0 & iter < max_iter){
       sub_samp <- sample(n, minibatch, replace=FALSE)
       #E-STEP
@@ -85,7 +88,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
           pi_ij[i,j] <- pi[j] * dmvnorm(as.numeric(xi), as.numeric(mu[[j]]), sigma[[j]])
         }
       }
-      for(i in 1:n){
+      for(i in sub_samp){
         pi_ij[i,] <- pi_ij[i,]/sum(pi_ij[i,])
       }
 
@@ -100,11 +103,11 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
         Sj[[j]] <- tmp
       }
       #Update component probabilities
-      pi <- apply(pi_ij, 2, mean)
+      pi <- apply(pi_ij[sub_samp,], 2, mean)
 
       #Update covariance matrices
       for(j in 1:p){
-        sigma[[j]] <- (2*a_n(n)*SX + Sj[[j]])/(2*a_n(n) + n*pi[j])
+        sigma[[j]] <- (2*a_n(n, kappa)*SX + Sj[[j]])/(2*a_n(n, kappa) + n*pi[j])
       }
 
       #Update mean vectors
@@ -114,18 +117,18 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
           xi <- X[i,]
           tmp <- tmp + pi_ij[i,j]*xi
         }
-        mu[[j]] <- tmp/(n*pi[j])
+        mu[[j]] <- tmp/(minibatch*pi[j])
       }
 
       #Compute log likelihood
-      log_lik[iter] <- 0
+      log_lik[iter] <- log(n) - log(minibatch)
       for(i in sub_samp){
         tmp <- 0
         xi <- X[i,]
         for(j in 1:p){
           tmp <- tmp + pi[j]*dmvnorm(xi, mu[[j]], sigma[[j]])
         }
-        log_lik[iter] <- log_lik[iter] + log(tmp) + log(n) - log(minibatch)
+        log_lik[iter] <- log_lik[iter] + log(tmp)
       }
       if((iter %% print_iter) == 0){
         if(verbose)
@@ -138,10 +141,12 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
     }
     log_lik <- log_lik[1:(iter - 1)]
 
-    out[[k]] <- list(log_lik = log_lik,
-                     pi = pi,
-                     mu = mu,
-                     sigma = sigma)
+    out[[cnt]] <- list(k=k,
+                       log_lik = log_lik,
+                       pi = pi,
+                       mu = mu,
+                       sigma = sigma)
+    cnt <- cnt + 1
     if(verbose){
       cat("\n\n")
     }
