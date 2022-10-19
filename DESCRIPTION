@@ -1,6 +1,6 @@
 Package: quack
 Title: Methods for Quantification of Uncertainty and Calibration for Physical Parameters
-Version: 0.0.0.9000
+Version: 1.0.0.0000
 Authors@R: 
     person(given = "Kellin",
            family = "Rumsey",
