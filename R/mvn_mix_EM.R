@@ -93,7 +93,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
       Sj <- list()
       for(j in 1:p){
         tmp <- matrix(0, nrow=d, ncol=d)
-        for(i in ind){
+        for(i in sub_samp){
           xi <- X[i,]
           tmp <- tmp + pi_ij[i,j]*tcrossprod(xi - mu[[j]])
         }
@@ -110,7 +110,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
       #Update mean vectors
       for(j in 1:p){
         tmp <- 0
-        for(i in ind){
+        for(i in sub_samp){
           xi <- X[i,]
           tmp <- tmp + pi_ij[i,j]*xi
         }
@@ -119,7 +119,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
 
       #Compute log likelihood
       log_lik[iter] <- 0
-      for(i in ind){
+      for(i in sub_samp){
         tmp <- 0
         xi <- X[i,]
         for(j in 1:p){
