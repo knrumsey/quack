@@ -12,7 +12,8 @@ mvn_mix(
   max_iter = 2000,
   verbose = FALSE,
   print_iter = 10,
-  crit = NULL
+  crit = NULL,
+  minibatch = nrow(X)
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ mvn_mix(
 \item{print_iter}{how often should information being printed? Ignored when verbose=FALSE.}
 
 \item{crit}{a subset of c("aic", "bic", "hqic") corresponding to Aikike's, Bayesian and Hanaan-Quinn information criteria.}
+
+\item{minibatch}{for stochastic udpating. epsilon should be set to -Inf.}
 }
 \value{
 a list with components corresponding to the fit using the number of components specified by \code{K}

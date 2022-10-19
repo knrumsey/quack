@@ -10,6 +10,7 @@
 #' @param verbose should information on status be printed
 #' @param print_iter how often should information being printed? Ignored when verbose=FALSE.
 #' @param crit a subset of c("aic", "bic", "hqic") corresponding to Aikike's, Bayesian and Hanaan-Quinn information criteria.
+#' @param minibatch for stochastic udpating. epsilon should be set to -Inf.
 #' @return a list with components corresponding to the fit using the number of components specified by `K`
 #' @details A regularized approach based loosely on Chi & Lange (2014).
 #'
@@ -45,9 +46,9 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
     stop("epsilon should be either scalar or a vector of length = length(K)")
   }
   if(minibatch < nrow(X)){
-    if(max(epsilon) > 0){
-      warning("Stochastic EM algorithm with minibatching ignores epsilon. Set epsilon = 0 to ignore this message")
-      epsilon <- rep(0, length(K))
+    if(max(epsilon) > -Inf){
+      warning("Stochastic EM algorithm with minibatching ignores epsilon. Set epsilon = -Inf to ignore this message")
+      epsilon <- rep(-Inf, length(K))
     }
   }
 
