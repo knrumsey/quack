@@ -36,14 +36,20 @@
 #' lines(1:3, obj$hqic, col="firebrick")
 #' legend("bottomleft", c("aic", "bic", "hqic"), lwd=2, col=c("orange", "dodgerblue", "firebrick"))
 #' @export
-mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=FALSE, print_iter = 10, crit=NULL){
+mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=FALSE, print_iter = 10, crit=NULL,
+                    minibatch=nrow(X)){
   if(length(epsilon) == 1){
     epsilon <- rep(epsilon, length(K))
   }
   if(length(epsilon) != length(K)){
     stop("epsilon should be either scalar or a vector of length = length(K)")
   }
-
+  if(minibatch < nrow(X)){
+    if(max(epsilon) > 0){
+      warning("Stochastic EM algorithm with minibatching ignores epsilon. Set epsilon = 0 to ignore this message")
+      epsilon <- rep(0, length(K))
+    }
+  }
 
   out <- list()
   for(k in K){
@@ -63,15 +69,16 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
     n <- nrow(X)
     p <- N_comp
     d <- nrow(SX)
-    pi_ij <- matrix(NA, nrow=n, ncol=p)
+    pi_ij <- matrix(0, nrow=n, ncol=p)
 
     iter <- 1
     tol <- Inf
     log_lik <- rep(NA, max_iter)
     eps0 <- epsilon[which(K==k)]
     while(tol > eps0 & iter < max_iter){
+      sub_samp <- sample(n, minibatch, replace=FALSE)
       #E-STEP
-      for(i in 1:n){
+      for(i in sub_samp){
         for(j in 1:p){
           xi <- X[i,]
           pi_ij[i,j] <- pi[j] * dmvnorm(as.numeric(xi), as.numeric(mu[[j]]), sigma[[j]])
@@ -85,7 +92,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
       Sj <- list()
       for(j in 1:p){
         tmp <- matrix(0, nrow=d, ncol=d)
-        for(i in 1:n){
+        for(i in ind){
           xi <- X[i,]
           tmp <- tmp + pi_ij[i,j]*tcrossprod(xi - mu[[j]])
         }
@@ -102,7 +109,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
       #Update mean vectors
       for(j in 1:p){
         tmp <- 0
-        for(i in 1:n){
+        for(i in ind){
           xi <- X[i,]
           tmp <- tmp + pi_ij[i,j]*xi
         }
@@ -111,13 +118,13 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=F
 
       #Compute log likelihood
       log_lik[iter] <- 0
-      for(i in 1:n){
+      for(i in ind){
         tmp <- 0
         xi <- X[i,]
         for(j in 1:p){
           tmp <- tmp + pi[j]*dmvnorm(xi, mu[[j]], sigma[[j]])
         }
-        log_lik[iter] <- log_lik[iter] + log(tmp)
+        log_lik[iter] <- log_lik[iter] + log(tmp) + log(n) - log(minibatch)
       }
       if((iter %% print_iter) == 0){
         if(verbose)
