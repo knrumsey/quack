@@ -4,7 +4,7 @@
 #'
 #' @param X data, a nxp matrix
 #' @param K a vector (or scalar for a single fit) of
-#' @param kappa Regularization parameter. Each Sigma is shrank towards Sx at iteration t with weight 1/t^kappa
+#' @param kappa Regularization parameter. Each Sigma is shrank towards Sx weight 1/nrow(X)^kappa
 #' @param epsilon stopping criterion for EM algorithm
 #' @param max_iter maximum number of iterations of EM algorithm
 #' @param verbose should information on status be printed
