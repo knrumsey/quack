@@ -7,9 +7,11 @@
 mvn_mix(
   X,
   K = 1:3,
+  kappa = 0.75,
   epsilon = 1e-05,
   max_iter = 2000,
   verbose = FALSE,
+  print_iter = 10,
   crit = NULL
 )
 }
@@ -18,11 +20,15 @@ mvn_mix(
 
 \item{K}{a vector (or scalar for a single fit) of}
 
+\item{kappa}{Regularization parameter. Each Sigma is shrank towards Sx at iteration t with weight 1/t^kappa}
+
 \item{epsilon}{stopping criterion for EM algorithm}
 
 \item{max_iter}{maximum number of iterations of EM algorithm}
 
 \item{verbose}{should information on status be printed}
+
+\item{print_iter}{how often should information being printed? Ignored when verbose=FALSE.}
 
 \item{crit}{a subset of c("aic", "bic", "hqic") corresponding to Aikike's, Bayesian and Hanaan-Quinn information criteria.}
 }
@@ -31,6 +37,11 @@ a list with components corresponding to the fit using the number of components s
 }
 \description{
 Returns a list of mixture distribution for various number of mixture components
+}
+\details{
+A regularized approach based loosely on Chi & Lange (2014).
+
+Chi, Eric C., and Kenneth Lange. "Stable estimation of a covariance matrix guided by nuclear norm penalties." Computational statistics & data analysis 80 (2014): 117-128.
 }
 \examples{
 n1 <- 300

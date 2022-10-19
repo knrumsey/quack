@@ -4,11 +4,16 @@
 #'
 #' @param X data, a nxp matrix
 #' @param K a vector (or scalar for a single fit) of
+#' @param kappa Regularization parameter. Each Sigma is shrank towards Sx at iteration t with weight 1/t^kappa
 #' @param epsilon stopping criterion for EM algorithm
 #' @param max_iter maximum number of iterations of EM algorithm
 #' @param verbose should information on status be printed
+#' @param print_iter how often should information being printed? Ignored when verbose=FALSE.
 #' @param crit a subset of c("aic", "bic", "hqic") corresponding to Aikike's, Bayesian and Hanaan-Quinn information criteria.
 #' @return a list with components corresponding to the fit using the number of components specified by `K`
+#' @details A regularized approach based loosely on Chi & Lange (2014).
+#'
+#' Chi, Eric C., and Kenneth Lange. "Stable estimation of a covariance matrix guided by nuclear norm penalties." Computational statistics & data analysis 80 (2014): 117-128.
 #' @examples
 #' n1 <- 300
 #' mu1 <- c(0, 0)
@@ -31,7 +36,7 @@
 #' lines(1:3, obj$hqic, col="firebrick")
 #' legend("bottomleft", c("aic", "bic", "hqic"), lwd=2, col=c("orange", "dodgerblue", "firebrick"))
 #' @export
-mvn_mix <- function(X, K=1:3, epsilon=1e-5, max_iter=2000, verbose=FALSE, crit=NULL){
+mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=FALSE, print_iter = 10, crit=NULL){
   if(length(epsilon) == 1){
     epsilon <- rep(epsilon, length(K))
   }
@@ -42,6 +47,9 @@ mvn_mix <- function(X, K=1:3, epsilon=1e-5, max_iter=2000, verbose=FALSE, crit=N
 
   out <- list()
   for(k in K){
+    if(verbose){
+      cat("Number of components:", k)
+    }
     N_comp <- k
     # Initialize model
     SX <- cov(X)
@@ -111,9 +119,9 @@ mvn_mix <- function(X, K=1:3, epsilon=1e-5, max_iter=2000, verbose=FALSE, crit=N
         }
         log_lik[iter] <- log_lik[iter] + log(tmp)
       }
-      if((iter %% 10) == 0){
+      if((iter %% print_iter) == 0){
         if(verbose)
-          cat("K: ", k, "\nIteration: ", iter, "\ntol: ", tol, "\n\n")
+          cat("\nIteration:", iter, ", tol:", tol, ", log-lik:", log_lik[iter])
       }
       if(iter > 1){
         tol <- log_lik[iter] - log_lik[iter - 1]
@@ -126,6 +134,9 @@ mvn_mix <- function(X, K=1:3, epsilon=1e-5, max_iter=2000, verbose=FALSE, crit=N
                      pi = pi,
                      mu = mu,
                      sigma = sigma)
+    if(verbose){
+      cat("\n\n")
+    }
   }
 
   if(!is.null(crit)){

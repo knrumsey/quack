@@ -14,6 +14,7 @@ slapGP(
   iso = TRUE,
   n = NA,
   start = NA,
+  H_max = Inf,
   ...
 )
 }
@@ -36,6 +37,8 @@ the matrix K^{-1} will be stored for each hub.}
 \item{n}{local neighborhood size}
 
 \item{start}{number of starting points for neighborhood (between 6 and n inclusive)}
+
+\item{H_max}{the maximum number of hubs allowed (used to upper bound the run time)}
 
 \item{...}{optional arguments to be passed to laGP()}
 }
