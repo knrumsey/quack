@@ -1,0 +1,43 @@
+---
+title: "Improper Mixture of Gamma Distributions"
+author: "Kellin Rumsey"
+date: "2/22/2023"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Let $X_1\sim \text{Gamma}(\alpha, \beta)$, $X_2 \sim \text{Gamma}(\alpha, \beta + \kappa)$ with $\kappa > 0$ and define $$\omega = \frac{1}{1 - \left(1 + \frac{\kappa}{\beta}\right)^{-\alpha}}.$$
+Now consider the random variable $X$ with distribution function
+$$F(x) = \omega F_1(x) + (1-\omega) F_2(x).$$
+Since $\omega > 1$ for all $\alpha,\beta,\kappa > 0$, we refer to this distribution as an improper mixture of Gammas. This distribution arises naturally as the full conditional posterior of a particular parameter in a model for modeling spatial-temporal extreme value data. 
+
+**Property A:** When $\kappa \rightarrow \infty$ (and $\omega \rightarrow 1$), $X$ converges in distribution to a Gamma$(\alpha, \beta)$ random variable.
+
+In the case where $\kappa \rightarrow 0$ and $\omega \rightarrow \infty$, things are not as simple. In this case, $F_2\rightarrow F_1$, but the limiting distribution of $X$ is (surprisingly) *not* a Gamma$(\alpha, \beta)$ distribution, due to the diverging $\omega$. The actual limiting distribution is unexepcted. 
+
+**Property B:** When $\kappa \rightarrow 0$ (and $\omega \rightarrow \infty$), $X$ converges in distribution to a Gamma$(\alpha + 1, \beta)$ random variable. 
+
+With the two limiting cases established, it seems reasonable that the following property would also hold. 
+
+**Property C:** (Not true!) If the distribution of $X$ is an improper mixture of Gammas, then there exists a $\lambda = \lambda(\kappa) \in (0, 1)$ such that $X$ has a Gamma$(\alpha + \lambda, \beta)$ distribution. 
+
+It turns out that property $C$ can be used as a quick approximation to to the I.M.Gamma distribution, but the approximation is not exact. This suggests that the I.M.Gamma distribution interpolates between Gamma$(\alpha, \beta)$ and Gamma$(\alpha + 1, \beta)$ in an entirely different way. 
+
+**Property C':** (Not true!) If the distribution of $X$ is an improper mixture of Gammas, then there exists a $\lambda = \lambda(\kappa) \in (0, 1)$ such that $X$ *approximately* has a Gamma$(\alpha + \lambda, \beta)$ distribution. 
+
+Work needs to be done to establish bounds on how good this approximation is. I have already found the KL divergence between two Gamma distributions with the same rate parameter, but it is hard to figure out how to leverage this, especially since KL divergence is not a proper metric (triangle inequality seems important). 
+
+
+
+
+
+
+
+
+
+
