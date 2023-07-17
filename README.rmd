@@ -19,11 +19,20 @@ library(knitr)
 
 The `quack` package contains several tools for UQ and Bayesian model calibration, with an emphasis on inference for physical parameters in complex physical systems. Many of the tools found in this package are implementations of the ideas found [here](https://digitalrepository.unm.edu/cgi/viewcontent.cgi?article=1165&=&context=math_etds&=&sei-redir=1&referer=https%253A%252F%252Fscholar.google.com%252Fscholar%253Fhl%253Den%2526as_sdt%253D0%25252C32%2526q%253DKellin%252BRumsey%252Bphysical%252Bparameters%2526btnG%253D#search=%22Kellin%20Rumsey%20physical%20parameters%22)
 
+### Note (7/17/23)
+The R package `MHadaptive` has been removed from CRAN. As of 7/17/2023, in order to install the `quack` package, users will first need to install `MHadaptive` from the Archive as 
+
+```{R, eval=FALSE}
+#install.packages("devtools")
+link <- "https://cran.r-project.org/src/contrib/Archive/MHadaptive/MHadaptive_1.1-8.tar.gz"
+devtools::install_url(link)
+```
+
 ## Installation
 
 To install the `quack` package, type
 
-```{R}
+```{R, eval=FALSE}
 # install.packages("devtools")
 devtools::install_github("knrumsey/quack")
 ```
