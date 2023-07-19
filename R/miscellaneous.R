@@ -26,6 +26,40 @@ smartLHS <- function(n, k, maximin_n=1e3, ...){
   return(augmentLHS(x, n2))
 }
 
+#' Kernel Density Estimate with Beta Kernels
+#'
+#' A kernel density estimate which will always integrate to 1 on the interval (0, 1)
+#'
+#' @param x the data from which the estimate is to be computed.
+#' @param v a smoothness parameter (smaller is smoother)
+#' @param n the number of points in (0, 1) on which the density is evaluated
+#' @return a list with components x and y
+#' @details KDE with beta kernels centered at each point in x. v is the "sample size" parameter of the beta.
+#' @examples
+#' x = rbeta(150, 3, 2)
+#' hist(x, freq=F, breaks=30, xlim=c(0,1))
+#' lines(density01(x, v=50), lwd=2, col='firebrick')
+#' lines(density01(x, v=100), lwd=2, col='orange')
+#' lines(density01(x, v=1000), lwd=2, col='dodgerblue')
+#' @export
+density01 <- function(x, v=100, n=512){
+  nx <- length(x)
+  xx <- seq(0, 1, length.out=n)
+  dens <- rep(0, n)
+  for(i in 1:nx){
+    v0 <- v
+    a <- b <- 0
+    while(min(a, b) < 1){
+      a = x[i]*v0
+      b = (1-x[i])*v0
+      v0 <- v0*1.05
+    }
+    dens <- dens + dbeta(xx, a, b)/nx
+  }
+  out <- list(x=xx, y=dens)
+  class(out) <- "density"
+  return(out)
+}
 
 
 #' A summary function to make things readily available for ggplot
