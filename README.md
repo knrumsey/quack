@@ -3,6 +3,17 @@
 
 # quack - R tools for UQ and calibration
 
+<div class="figure">
+
+<img src="inst/logos/QUACK.png" alt="This logo was designed by Imagine AI Art Studio" width="40%" />
+<p class="caption">
+This logo was designed by Imagine AI Art Studio
+</p>
+
+</div>
+
+### Description
+
 The `quack` package contains several tools for UQ and Bayesian model
 calibration, with an emphasis on inference for physical parameters in
 complex physical systems. Many of the tools found in this package are
