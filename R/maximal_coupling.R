@@ -38,5 +38,10 @@ maximal_coupling <- function(n, d1, d2, g1=NULL, g2=NULL){
   return(X)
 }
 
+d1 <- function(x) dnorm(x)
+d2 <- function(x) dunif(x, -3, 3)
+g1 <- function()  rnorm(1)
+g2 <- function()  runif(1, -3, 3)
+foo <- maximal_coupling(1000, d1, d2, g1, g2)
 
-
+hist(foo[,1], )
