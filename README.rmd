@@ -54,7 +54,9 @@ See [manual](https://github.com/knrumsey/quack/blob/master/quack_0.0.0.9000.pdf)
   - [**Fast matrix algebra for BMC**](https://www.tandfonline.com/doi/pdf/10.1080/00949655.2020.1850729?casa_token=aa1qKL4wpeoAAAAA:R5KvrccY4aWIDYLi5OqQKYHCfV5JMK-nEKytBwjmAqwSgW8miqZMlfqs9yStkQDXqtW3PHg74j4): Near-quadratic time approximations to the inverse of the covariance matrix given a particular structure. Useful for model calibration when a large number of sequential inversions are needed. 
   - **Sequential local approximate GPs**: Implementations of `slapGP` and `leapGP` which are two "global-model" extensions of the [laGP](https://www.jstatsoft.org/index.php/jss/article/view/v072i01/1030) framework. 
   - **Accelerated bootstrap**: An implementation of the accelerated bootstrap.
-  - [**Joint credible regions**](https://stats.stackexchange.com/questions/361350/joint-credible-regions-from-mcmc-draws): Function to find elliptical joint credible regions given a sample of points $x \in \mathbb R^p$,
+  - [**Joint credible regions**](https://stats.stackexchange.com/questions/361350/joint-credible-regions-from-mcmc-draws): Function to find elliptical joint credible regions given a sample of points $x \in \mathbb R^p$.
+  - [**Mixture of MVNs**](https://www.sciencedirect.com/science/article/pii/S0047259X08002728): Regularized estimator for high-dimensional mixtures (using the EM algorithm). 
+  - [**KL Divergence Estimator**](https://ieeexplore.ieee.org/abstract/document/4595271) An estimator for the KLD given independent samples x ~ P and y ~ Q. 
   
 ## References
 
@@ -68,6 +70,9 @@ Rumsey, Kellin N., and Gabriel Huerta. "Fast matrix algebra for Bayesian model c
 
 Gramacy, Robert B. "laGP: large-scale spatial modeling via local approximate Gaussian processes in R." Journal of Statistical Software 72 (2016): 1-46
 
+Chen, Jiahua, and Xianming Tan. "Inference for multivariate normal mixtures." Journal of Multivariate Analysis 100.7 (2009): 1367-1383.
+
+Pérez-Cruz, Fernando. "Kullback-Leibler divergence estimation of continuous distributions." 2008 IEEE international symposium on information theory. IEEE, 2008.
 
   
   

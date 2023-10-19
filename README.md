@@ -73,7 +73,14 @@ for details.
 - [**Joint credible
   regions**](https://stats.stackexchange.com/questions/361350/joint-credible-regions-from-mcmc-draws):
   Function to find elliptical joint credible regions given a sample of
-  points $x \in \mathbb R^p$,
+  points $x \in \mathbb R^p$.
+- [**Mixture of
+  MVNs**](https://www.sciencedirect.com/science/article/pii/S0047259X08002728):
+  Regularized estimator for high-dimensional mixtures (using the EM
+  algorithm).
+- [**KL Divergence
+  Estimator**](https://ieeexplore.ieee.org/abstract/document/4595271) An
+  estimator for the KLD given independent samples x ~ P and y ~ Q.
 
 ## References
 
@@ -94,3 +101,10 @@ model calibration.” Journal of Statistical Computation and Simulation
 Gramacy, Robert B. “laGP: large-scale spatial modeling via local
 approximate Gaussian processes in R.” Journal of Statistical Software 72
 (2016): 1-46
+
+Chen, Jiahua, and Xianming Tan. “Inference for multivariate normal
+mixtures.” Journal of Multivariate Analysis 100.7 (2009): 1367-1383.
+
+Pérez-Cruz, Fernando. “Kullback-Leibler divergence estimation of
+continuous distributions.” 2008 IEEE international symposium on
+information theory. IEEE, 2008.

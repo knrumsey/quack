@@ -7,7 +7,7 @@
 #' @param type See details
 #' @param lambda parameter (between 0 and 1) for the Population Stability Index (ignored unless type = 4)
 #' @param n_mc number of monte carlo samples used when type = 3 or 4
-#' @details Set type = 1 for D(P||Q), type = 2 for symmetrized "Jeffreys Divergence", type = 3 for symmetric "Jensen-Shannon Divergence", type = 4 for Population Stability Index. When type = 3 or 4, n_mc must be set for approximation. When type = 4, lambda must be specified. lambda = 1/2 is equialent to type = 3.
+#' @details Set type = 1 for D(P||Q), type = 2 for symmetrized "Jeffreys Divergence", type = 3 for symmetric "Jensen-Shannon Distance", type = 4 for Population Stability Index (with parameter lambda between 0 and 1). When type = 3 or 4, n_mc must be set for approximation. When type = 4, lambda must be specified. lambda = 1/2 is equivalent to type = 3.
 #' @examples
 #' x <- rnorm(100)
 #' y <- rgamma(200, 3, 2) - 1.5
@@ -28,16 +28,24 @@ kld <- function(x, y, type=1, lambda=1/2, n_mc=1){
   if(type >= 3){
     nx <- length(x)
     ny <- length(y)
-    N <- max(nx, ny)
+    N <- min(nx, ny)
     D <- rep(NA, n_mc)
     z <- rep(NA, N)
     for(i in 1:n_mc){
-      z <- sample(c(x, y), size=N,
-                  replace=TRUE,
+      z0 <- sample(c(x, y), size=N,
+                  replace=FALSE,
                   prob=c(rep(lambda/nx, nx),
                           rep((1-lambda)/ny, ny)))
+      #'I don't know why this is needed,
+      #'but estimator gets weird without it.
+      #'I guess it's because the samples have
+      #'to be independent, and the way i'm doing
+      #'the mixture the samples are dependent
+      #'(e.g., z dependent on x)
+      z <- z0 + rnorm(N, 0, 2*diff(range(z0))/N)
       D1  <- compute_kld(x, z)
       D2  <- compute_kld(y, z)
+      lambda*D1 + (1-lambda)*D2
       D[i] <- lambda*D1 + (1-lambda)*D2
     }
     return(D)
@@ -77,11 +85,17 @@ compute_kld <- function(x, y){
 
   D <- 0
   n <- length(x)
-  for(i in 1:n){
-    Dx <- log(pz(x[i], x) - pz(x[i]-eps, x))
-    Dy <- log(pz(x[i], y) - pz(x[i]-eps, y))
-    D  <- D + Dx - Dy
-  }
-  D <- D/n - 1
+  Dx <- unlist(lapply(1:n, function(i, x, eps) log(pz(x[i], x) - pz(x[i]-eps, x)), x=x, eps=eps))
+  Dy <- unlist(lapply(1:n, function(i, x, y, eps) log(pz(x[i], y) - pz(x[i]-eps, y)), x=x, y=y, eps=eps))
+  D <- mean(Dx - Dy) - 1
   return(D)
 }
+
+x <- rexp(1000)
+y <- rnorm(1000, 3, 2)
+z <- rexp(1000)*(B <- rbinom(1000, 1, 1/2)) + (1-B)*rnorm(1000, 3, 2)
+1/2*kld(x, z) + 1/2*kld(y, z)
+
+kld(x, y, type=3)
+
+
