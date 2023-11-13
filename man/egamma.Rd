@@ -7,11 +7,7 @@
 \alias{qegamma}
 \alias{regamma}
 \alias{megamma}
-\title{Extended Gamma Distribution
-
-The EGamma(alpha, beta, kappa) is best described by its CDF which has the form F(x) = wF_1(x) + (1-w)F_2(x)
-where w = beta^-alpha/(beta^-alpha - (beta + kappa)^-alpha) > 1. F_1 is the CDF of a gamma(alpha, beta) distribution
-and F_2 is the CDF of a gamma(alpha, beta + kappa) distribution.}
+\title{Extended Gamma Distribution}
 \usage{
 degamma(x, alpha, beta, kappa, log = FALSE)
 
@@ -47,8 +43,6 @@ megamma(k = 1, alpha, beta, kappa, ...)
 \item{k}{the moment desired}
 }
 \description{
-Extended Gamma Distribution
-
 The EGamma(alpha, beta, kappa) is best described by its CDF which has the form F(x) = wF_1(x) + (1-w)F_2(x)
 where w = beta^-alpha/(beta^-alpha - (beta + kappa)^-alpha) > 1. F_1 is the CDF of a gamma(alpha, beta) distribution
 and F_2 is the CDF of a gamma(alpha, beta + kappa) distribution.

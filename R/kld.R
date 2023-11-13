@@ -12,6 +12,7 @@
 #' x <- rnorm(100)
 #' y <- rgamma(200, 3, 2) - 1.5
 #' kld(x, y)
+#'
 #' @export
 kld <- function(x, y, type=1, lambda=1/2, n_mc=1){
   if(type == 1){
@@ -36,12 +37,12 @@ kld <- function(x, y, type=1, lambda=1/2, n_mc=1){
                   replace=FALSE,
                   prob=c(rep(lambda/nx, nx),
                           rep((1-lambda)/ny, ny)))
-      #'I don't know why this is needed,
-      #'but estimator gets weird without it.
-      #'I guess it's because the samples have
-      #'to be independent, and the way i'm doing
-      #'the mixture the samples are dependent
-      #'(e.g., z dependent on x)
+      # I don't know why this is needed,
+      # but estimator gets weird without it.
+      # I guess it's because the samples have
+      # to be independent, and the way i'm doing
+      # the mixture the samples are dependent
+      # (e.g., z dependent on x)
       z <- z0 + rnorm(N, 0, 2*diff(range(z0))/N)
       D1  <- compute_kld(x, z)
       D2  <- compute_kld(y, z)
@@ -91,11 +92,6 @@ compute_kld <- function(x, y){
   return(D)
 }
 
-x <- rexp(1000)
-y <- rnorm(1000, 3, 2)
-z <- rexp(1000)*(B <- rbinom(1000, 1, 1/2)) + (1-B)*rnorm(1000, 3, 2)
-1/2*kld(x, z) + 1/2*kld(y, z)
 
-kld(x, y, type=3)
 
 

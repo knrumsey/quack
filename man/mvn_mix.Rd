@@ -12,7 +12,7 @@ mvn_mix(
   max_iter = 2000,
   verbose = TRUE,
   print_iter = 10,
-  crit = NULL,
+  crit = c("aic", "bic", "hqic"),
   minibatch = nrow(X)
 )
 }

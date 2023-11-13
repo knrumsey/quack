@@ -3,6 +3,7 @@
 #'
 #' @title Extended Gamma Distribution
 #'
+#' @description
 #' The EGamma(alpha, beta, kappa) is best described by its CDF which has the form F(x) = wF_1(x) + (1-w)F_2(x)
 #' where w = beta^-alpha/(beta^-alpha - (beta + kappa)^-alpha) > 1. F_1 is the CDF of a gamma(alpha, beta) distribution
 #' and F_2 is the CDF of a gamma(alpha, beta + kappa) distribution.
