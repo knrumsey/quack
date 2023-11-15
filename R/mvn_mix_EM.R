@@ -39,6 +39,9 @@
 #' @export
 mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=TRUE, print_iter = 10, crit=c("aic", "bic", "hqic"),
                     minibatch=nrow(X)){
+  if(length(dim(X)) != 2){
+    stop("X must be a matrix")
+  }
   if(length(epsilon) == 1){
     epsilon <- rep(epsilon, length(K))
   }
@@ -126,7 +129,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=T
         tmp <- 0
         xi <- X[i,]
         for(j in 1:p){
-          tmp <- tmp + pi[j]*dmvnorm(xi, mu[[j]], sigma[[j]])
+          tmp <- tmp + pi[j]*mvtnorm::dmvnorm(xi, mu[[j]], sigma[[j]])
         }
         log_lik[iter] <- log_lik[iter] + log(tmp)
       }
@@ -157,25 +160,31 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=T
     Kmax <- length(out)
     bic <- ll <- rep(NA, Kmax)
     aic <- hqic <- rep(NA, Kmax)
-    k <- 1
-    bic[1] <- -2*sum(log(dmvnorm(X, apply(X, 2, mean), cov(X)))) +
-      (k-1 + nvar*k + nvar*(nvar+1)/2*k)*log(nrow(X))
-    aic[1] <- -2*sum(log(dmvnorm(X, apply(X, 2, mean), cov(X)))) +
-      (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2
-    hqic[1] <- -2*sum(log(dmvnorm(X, apply(X, 2, mean), cov(X)))) +
-      (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2*log(log(n))
-    ll[1] <- sum(log(dmvnorm(X, apply(X, 2, mean), cov(X))))
+    kvec <- rep(NA, Kmax)
 
-
-    for(k in 2:Kmax){
-      tmp <- out[[k]]$log_lik
-      bic[k] <- -2*max(tmp) + (k-1 + nvar*k + nvar*(nvar+1)/2*k)*log(nrow(X))
-      aic[k] <- -2*max(tmp) + (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2
-      hqic[k]<- -2*max(tmp) + (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2*log(log(nrow(X)))
-      ll[k] <- max(tmp)
+    kk <- 1
+    for(k in K){
+      kvec[kk] <- k
+      if(k == 1){
+        bic[kk] <- -2*sum(log(dmvnorm(X, apply(X, 2, mean), cov(X)))) +
+          (k-1 + nvar*k + nvar*(nvar+1)/2*k)*log(nrow(X))
+        aic[kk] <- -2*sum(log(dmvnorm(X, apply(X, 2, mean), cov(X)))) +
+          (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2
+        hqic[kk] <- -2*sum(log(dmvnorm(X, apply(X, 2, mean), cov(X)))) +
+          (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2*log(log(n))
+        ll[kk] <- sum(log(dmvnorm(X, apply(X, 2, mean), cov(X))))
+      }else{
+        tmp <- out[[kk]]$log_lik
+        bic[kk] <- -2*max(tmp) + (k-1 + nvar*k + nvar*(nvar+1)/2*k)*log(nrow(X))
+        aic[kk] <- -2*max(tmp) + (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2
+        hqic[kk]<- -2*max(tmp) + (k-1 + nvar*k + nvar*(nvar+1)/2*k)*2*log(log(nrow(X)))
+        ll[kk] <- max(tmp)
+      }
+      kk <- kk + 1
     }
 
     out2 <- list(fits=out)
+    out2$k <- kvec
     if("aic" %in% crit){
       out2$aic <- aic
     }
@@ -203,7 +212,7 @@ mvn_mix <- function(X, K=1:3, kappa=0.75, epsilon=1e-5, max_iter=2000, verbose=T
 #' obj <- fit[[3]]
 #' xx <- rmvn_mix(1000, obj)
 #' hist(xx)
-#' dmvnorm(c(2, 3, 4), obj)
+#' mvtnorm::dmvnorm(c(2, 3, 4), obj)
 #' @export
 rmvn_mix <- function(n, obj){
   p <- length(obj$mu[[1]])
@@ -247,7 +256,7 @@ dmvn_mix <- function(x, obj, log=FALSE){
   res <- matrix(0, nrow=n, ncol=p)
   for(i in 1:n){
     for(j in 1:L){
-      res[i] <- res[i] + obj$pi[j]*dmvnorm(x[i],
+      res[i] <- res[i] + obj$pi[j]*mvtnorm::dmvnorm(x[i],
                                            obj$mu[[j]],
                                            as.matrix(obj$sigma[[j]]))
     }

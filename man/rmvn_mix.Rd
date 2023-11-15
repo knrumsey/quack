@@ -22,5 +22,5 @@ fit <- mvn_mix(x, K=1:3)
 obj <- fit[[3]]
 xx <- rmvn_mix(1000, obj)
 hist(xx)
-dmvnorm(c(2, 3, 4), obj)
+mvtnorm::dmvnorm(c(2, 3, 4), obj)
 }
