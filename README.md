@@ -67,7 +67,9 @@ for details.
 - **Sequential local approximate GPs**: Implementations of `slapGP` and
   `leapGP` which are two “global-model” extensions of the
   [laGP](https://www.jstatsoft.org/index.php/jss/article/view/v072i01/1030)
-  framework.
+  framework. (Note: See
+  [github.com/knrumsey/leapgp](https://www.github.com/knrumsey/leapgp)
+  for a newer implementation.)
 - **Accelerated bootstrap**: An implementation of the accelerated
   bootstrap.
 - [**Joint credible
@@ -81,6 +83,9 @@ for details.
 - [**KL Divergence
   Estimator**](https://ieeexplore.ieee.org/abstract/document/4595271) An
   estimator for the KLD given independent samples x ~ P and y ~ Q.
+- [**Continuous Ranked Probability
+  Scoore**](https://link.springer.com/article/10.1007/s11004-017-9709-7)
+  A class of estimators for CRPS (see Zamo and Naveau 2017).
 
 ## References
 
@@ -108,3 +113,7 @@ mixtures.” Journal of Multivariate Analysis 100.7 (2009): 1367-1383.
 Pérez-Cruz, Fernando. “Kullback-Leibler divergence estimation of
 continuous distributions.” 2008 IEEE international symposium on
 information theory. IEEE, 2008.
+
+Zamo, M., & Naveau, P. (2018). Estimation of the continuous ranked
+probability score with limited information and applications to ensemble
+weather forecasts. Mathematical Geosciences, 50(2), 209-234.

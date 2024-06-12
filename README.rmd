@@ -52,11 +52,12 @@ See [manual](https://github.com/knrumsey/quack/blob/master/quack_0.0.0.9000.pdf)
   - [**Moment penalization**](https://epubs.siam.org/doi/pdf/10.1137/19M1283707?casa_token=javZzkQnG4oAAAAA:NqF-i_Wpuz5I8j0IHYK-j-q4QzoJr04ohxO1PBMHLwKE640bTAD1MsalHKtFBu1-VTsuu4sR): functions for the moment penalization (MP) prior, which are useful for improving identifiability and reducing bias when a physical system contains a set of nuisance parameters which can be viewed as iid samples from a specified distribution. Also contains methods for computing the probability of prior coherency, a useful diagnostic tool. 
   - **Emulating the conditional posterior**: A fast approach for approximating the [cut distribution](https://idp.springer.com/authorize/casa?redirect_uri=https://link.springer.com/article/10.1007/s11222-014-9503-z&casa_token=K78vRWO3qrQAAAAA:12SChC4sxODP5fp0NYdGSQ-1YybCxPndiT6JZb_NXdKtVlf3-eRa87JvfULTvZs1D30yMOJkWZfOpdQ) in low to moderate dimensions. 
   - [**Fast matrix algebra for BMC**](https://www.tandfonline.com/doi/pdf/10.1080/00949655.2020.1850729?casa_token=aa1qKL4wpeoAAAAA:R5KvrccY4aWIDYLi5OqQKYHCfV5JMK-nEKytBwjmAqwSgW8miqZMlfqs9yStkQDXqtW3PHg74j4): Near-quadratic time approximations to the inverse of the covariance matrix given a particular structure. Useful for model calibration when a large number of sequential inversions are needed. 
-  - **Sequential local approximate GPs**: Implementations of `slapGP` and `leapGP` which are two "global-model" extensions of the [laGP](https://www.jstatsoft.org/index.php/jss/article/view/v072i01/1030) framework. 
+  - **Sequential local approximate GPs**: Implementations of `slapGP` and `leapGP` which are two "global-model" extensions of the [laGP](https://www.jstatsoft.org/index.php/jss/article/view/v072i01/1030) framework. (Note: See [github.com/knrumsey/leapgp](https://www.github.com/knrumsey/leapgp) for a newer implementation.)
   - **Accelerated bootstrap**: An implementation of the accelerated bootstrap.
   - [**Joint credible regions**](https://stats.stackexchange.com/questions/361350/joint-credible-regions-from-mcmc-draws): Function to find elliptical joint credible regions given a sample of points $x \in \mathbb R^p$.
   - [**Mixture of MVNs**](https://www.sciencedirect.com/science/article/pii/S0047259X08002728): Regularized estimator for high-dimensional mixtures (using the EM algorithm). 
   - [**KL Divergence Estimator**](https://ieeexplore.ieee.org/abstract/document/4595271) An estimator for the KLD given independent samples x ~ P and y ~ Q. 
+  - [**Continuous Ranked Probability Scoore**](https://link.springer.com/article/10.1007/s11004-017-9709-7) A class of estimators for CRPS (see Zamo and Naveau 2017).
   
 ## References
 
@@ -74,6 +75,7 @@ Chen, Jiahua, and Xianming Tan. "Inference for multivariate normal mixtures." Jo
 
 Pérez-Cruz, Fernando. "Kullback-Leibler divergence estimation of continuous distributions." 2008 IEEE international symposium on information theory. IEEE, 2008.
 
+Zamo, M., & Naveau, P. (2018). Estimation of the continuous ranked probability score with limited information and applications to ensemble weather forecasts. Mathematical Geosciences, 50(2), 209-234.
   
   
 
