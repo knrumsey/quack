@@ -65,10 +65,10 @@ cdf_dist_lp <- function(x, y, p=1, n_pts=30){
 #' @examples
 #' x <- matrix(rnorm(300), ncol=3)
 #' y <- matrix(rgamma(180, 3, 2) - 1.5, ncol=3)
-#' ks(x, y)
+#' ks_dist(x, y)
 #'
 #' @export
-ks <- function(x, y, n_pts=30){
+ks_dist <- function(x, y, n_pts=30){
   cdf_dist_lp(x, y, p=Inf, n_pts=n_pts)
 }
 
