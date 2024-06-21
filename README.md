@@ -86,6 +86,14 @@ for details.
 - [**Continuous Ranked Probability
   Scoore**](https://link.springer.com/article/10.1007/s11004-017-9709-7)
   A class of estimators for CRPS (see Zamo and Naveau 2017).
+- [**CDF
+  Distances**](https://methods.stat.kit.edu/download/doc_secure1/3_StochModels.pdf)
+  Estimators for the distance between two CDFs (based on multivariate
+  samples x and y). Special cases include KS Distance and Kantorovich
+  Distance.
+- [\*\*Sparse Bayesian Polynomial
+  Chaos:](https://hal.science/hal-01476649/document) An implementation
+  of the algorithm described in Shao et al. (2017)
 
 ## References
 
@@ -117,3 +125,7 @@ information theory. IEEE, 2008.
 Zamo, M., & Naveau, P. (2018). Estimation of the continuous ranked
 probability score with limited information and applications to ensemble
 weather forecasts. Mathematical Geosciences, 50(2), 209-234.
+
+Shao, Q., Younes, A., Fahs, M., & Mara, T. A. (2017). Bayesian sparse
+polynomial chaos expansion for global sensitivity analysis. Computer
+Methods in Applied Mechanics and Engineering, 318, 474-496.

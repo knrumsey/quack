@@ -1,6 +1,5 @@
 #' Lp Distance Between CDFs for Multivariate Samples
 #'
-#'
 #' @param x a vector of samples from P
 #' @param y a vector of samples from Q
 #' @param p norm order (p=Inf returns KS distance, p=1 returns Kantorovich distance)
