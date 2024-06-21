@@ -27,7 +27,7 @@ bayes_chaos <- function(X, y, max_degree_init=2, max_order_init=1, max_degree=20
   sig_y <- sd(y)
   y <- (y - mu_y)/sig_y
 
-  res <- bayes_chaos_wrapper(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda, verbose)
+  res <- bayes_chaos_wrapper(X, y, n, p, md, mo, mu_y, sig_y, max_degree, lambda, verbose)
   return(res)
 }
 
