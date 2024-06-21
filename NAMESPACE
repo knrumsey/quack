@@ -3,6 +3,7 @@
 S3method(fast_inv,FM_approx)
 S3method(fast_inv,FM_fast)
 S3method(fast_inv,FM_ts)
+S3method(plot,bayes_chaos)
 S3method(predict,bayes_chaos)
 export(ECP)
 export(ECP_profile_plot)
