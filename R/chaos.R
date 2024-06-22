@@ -8,6 +8,7 @@
 #' @param max_order_init The maximum order of interaction (for initial model)
 #' @param max_degree The maximum degree allowed (bounds the computation time).
 #' @param lambda A parameter fed to the KIC calculations. Larger values will lead to sparser models.
+#' @param rho Basis functions are only kept if their square partial correlation coefficient is bigger than rho.
 #' @param verbose Logical. Should progress information be printed?
 #' @details Implements the Bayesian sparse PCE method described by Shao et al. (2017).
 #' @references Shao, Q., Younes, A., Fahs, M., & Mara, T. A. (2017). Bayesian sparse polynomial chaos expansion for global sensitivity analysis. Computer Methods in Applied Mechanics and Engineering, 318, 474-496.
@@ -17,7 +18,7 @@
 #' fit <- bayes_chaos(X, y)
 #' plot(fit)
 #' @export
-bayes_chaos <- function(X, y, max_degree_init=2, max_order_init=1, max_degree=20, lambda=1, verbose=TRUE){
+bayes_chaos <- function(X, y, max_degree_init=2, max_order_init=1, max_degree=6, lambda=1, rho=0, verbose=TRUE){
   n <- nrow(X)
   p <- ncol(X)
   md <- max_degree_init
@@ -27,11 +28,11 @@ bayes_chaos <- function(X, y, max_degree_init=2, max_order_init=1, max_degree=20
   sig_y <- sd(y)
   y <- (y - mu_y)/sig_y
 
-  res <- bayes_chaos_wrapper(X, y, n, p, md, mo, mu_y, sig_y, max_degree, lambda, verbose)
+  res <- bayes_chaos_wrapper(X, y, n, p, md, mo, mu_y, sig_y, max_degree, lambda, rho, verbose)
   return(res)
 }
 
-bayes_chaos_wrapper <- function(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda, verbose){
+bayes_chaos_wrapper <- function(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda, rho, verbose){
   # Create a list of p sequences from 1 to n
   if(verbose){
     cat("Starting model with max degree = ", md, " and max order = ", mo, "\n", sep="")
@@ -41,7 +42,7 @@ bayes_chaos_wrapper <- function(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda,
   A_deg <- apply(A_set, 1, sum)
   A_ord <- apply(A_set, 1, function(aa) sum(aa > 0))
   N_alpha <- nrow(A_set)
-
+  if(verbose) cat("\tFound ", N_alpha, " possible basis functions.\n", sep="")
   phi <- matrix(NA, nrow=n, ncol=N_alpha)
   rr <- rep(NA, N_alpha)
   for(i in 1:N_alpha){
@@ -59,15 +60,36 @@ bayes_chaos_wrapper <- function(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda,
   phi <- phi[,ord]
   rr <- rr[ord]
 
-  # Get conditional covariances
+  ### LASSO IF NEEDED?
+  if(verbose) cat("\tRunning weighted LASSO...", sep="")
+  lfit <- glmnet::glmnet(phi, y, penalty.factor=1-rr^2, dfmax=n-2)
+  count_nonzero <- apply(lfit$beta, 2, function(bb) sum(bb != 0))
+  lambda_indx <- max(which(count_nonzero < n))
+  lambda_use <- lfit$lambda[lambda_indx]
+  alpha_indx <- which(lfit$beta[,lambda_indx] != 0)
+  if(length(alpha_indx) == 0) alpha_indx <- 1
+  N_alpha <- length(alpha_indx)
+  A_set <- A_set[alpha_indx,]
+  A_deg <- A_deg[alpha_indx]
+  A_ord <- A_ord[alpha_indx]
+  phi <- phi[,alpha_indx]
+  rr <- rr[alpha_indx]
+  if(verbose) cat(" Keeping ", N_alpha, " basis functions\n", sep="")
+
+  # Get partial correlation coefficients
   if(verbose) cat("\tComputing partial correlation coefficients\n")
+  if(verbose) cat("\t\tFitting linear models: 0/", N_alpha, ", ", sep="")
   for(i in 2:N_alpha){
-    if(N_alpha > 50 && ((i %% round(N_alpha/10)) == 0)){
-      if(verbose) cat("\t\t completed ", i, " out of ", N_alpha, ",   ", "\n",sep="")
+    if(N_alpha > 20 && ((i %% round(N_alpha/5)) == 0)){
+      if(verbose) cat(i, "/", N_alpha, ", ",sep="")
     }
     eps_y <- lm(y ~ phi[,1:(i-1)])$residuals
     eps_p <- lm(phi[,i] ~ phi[,1:(i-1)])$residuals
     rr[i] <- cor(eps_y, eps_p)
+  }
+
+  if(any(abs(rr) > 1)){
+    rr <- rr/max(abs(rr))
   }
   ord <- rev(order(rr^2))
   A_set <- A_set[ord,]
@@ -77,18 +99,20 @@ bayes_chaos_wrapper <- function(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda,
   rr <- rr[ord]
 
   # Get KIC for various models
-  if(verbose) cat("\tRanking models based on KIC\n")
-
+  if(verbose) cat("\n\tRanking models based on KIC\n")
   # Add coefficient column in
   phi <- cbind(rep(1, n), phi)
   A_set <- rbind(rep(0, p), A_set)
-
-  KIC <- rep(NA, N_alpha+1)
+  K_trunc <- max(which(rr^2 >= rho)) + 1
+  if(verbose){
+    if(rho > 0) cat("\t\t Throwing out bases with low partial correlation. ", K_trunc, " remain.\n", sep="")
+  }
+  KIC <- rep(NA, K_trunc)
   KIC[1] <- Inf
-  Caa <- diag(c(1, (A_deg + A_ord -1)*A_ord^2))
+  Caa <- diag(c((md+mo-1)*mo^2, (A_deg + A_ord -1)*A_ord^2))
   Caa_inv <- diag(1/diag(Caa))
   best <- list(k=0, KIC=Inf, map=NULL)
-  for(k in 2:(N_alpha+1)){
+  for(k in 2:K_trunc){
     map_k <- estimate_map(y, phi[,1:k,drop=FALSE], Caa_inv[1:k, 1:k, drop=FALSE])
     yhat_k <- phi[,1:k]%*%map_k$a
     KIC[k] <- -2*sum(dnorm(y, yhat_k, map_k$sig, log=TRUE)) -
@@ -101,8 +125,8 @@ bayes_chaos_wrapper <- function(X, y, n, p, md, mo, mu_y, sig_y, realmd, lambda,
     }
   }
   if(md <= realmd - 2){
-    if(max(A_deg[1:best$k]) + 1 >= md){
-      res <- bayes_chaos_wrapper(X, y, n, p, md+2, mo+1, mu_y, sig_y, realmd, lambda, verbose)
+    if(max(A_deg[1:(best$k-1)]) + 1 >= md){
+      res <- bayes_chaos_wrapper(X, y, n, p, md+2, mo+1, mu_y, sig_y, realmd, lambda, rho, verbose)
       return(res)
     }
   }

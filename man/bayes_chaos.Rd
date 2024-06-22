@@ -9,8 +9,9 @@ bayes_chaos(
   y,
   max_degree_init = 2,
   max_order_init = 1,
-  max_degree = 20,
+  max_degree = 6,
   lambda = 1,
+  rho = 0,
   verbose = TRUE
 )
 }
@@ -26,6 +27,8 @@ bayes_chaos(
 \item{max_degree}{The maximum degree allowed (bounds the computation time).}
 
 \item{lambda}{A parameter fed to the KIC calculations. Larger values will lead to sparser models.}
+
+\item{rho}{Basis functions are only kept if their square partial correlation coefficient is bigger than rho.}
 
 \item{verbose}{Logical. Should progress information be printed?}
 }

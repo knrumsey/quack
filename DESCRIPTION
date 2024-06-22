@@ -24,4 +24,5 @@ Imports:
     lhs,
     MHadaptive,
     rootSolve,
-    mvtnorm
+    mvtnorm,
+    glmnet

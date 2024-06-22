@@ -44,14 +44,21 @@ generate_A <- function(p, d, q) {
 }
 
 
-estimate_map <- function(y, phi, Cinv, sig0=1, tol=1e-5, max_iter=1000){
+estimate_map <- function(y, phi, Cinv, sig0=1, tol=1e-3, max_iter=1000){
   n <- length(y)
   p <- ncol(phi)
   sig_curr <- sig0
+  Cinv <- Cinv
   flag <- TRUE
   cnt <- 1
   while(flag){
     Cinv_curr <-  crossprod(phi)/sig_curr^2 + Cinv
+    tmp <- tryCatch({
+      solve(Cinv_curr)
+    }, error=function(e){ NULL })
+    if(is.null(tmp)){
+      Cinv_curr <- as.matrix(Matrix::nearPD(Cinv_curr)$mat)
+    }
     C_curr <- solve(Cinv_curr)
     a_curr <- (tcrossprod(C_curr, phi)%*%y)/sig_curr^2
     yhat   <- phi%*%a_curr
