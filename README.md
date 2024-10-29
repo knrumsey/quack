@@ -77,23 +77,31 @@ for details.
   Function to find elliptical joint credible regions given a sample of
   points $x \in \mathbb R^p$.
 - [**Mixture of
-  MVNs**](https://www.sciencedirect.com/science/article/pii/S0047259X08002728):
+  MVNs.**](https://www.sciencedirect.com/science/article/pii/S0047259X08002728):
   Regularized estimator for high-dimensional mixtures (using the EM
   algorithm).
 - [**KL Divergence
-  Estimator**](https://ieeexplore.ieee.org/abstract/document/4595271) An
-  estimator for the KLD given independent samples x ~ P and y ~ Q.
+  Estimator**](https://ieeexplore.ieee.org/abstract/document/4595271):
+  An estimator for the KLD given independent samples x ~ P and y ~ Q.
 - [**Continuous Ranked Probability
-  Scoore**](https://link.springer.com/article/10.1007/s11004-017-9709-7)
+  Scoore**](https://link.springer.com/article/10.1007/s11004-017-9709-7):
   A class of estimators for CRPS (see Zamo and Naveau 2017).
 - [**CDF
-  Distances**](https://methods.stat.kit.edu/download/doc_secure1/3_StochModels.pdf)
+  Distances**](https://methods.stat.kit.edu/download/doc_secure1/3_StochModels.pdf):
   Estimators for the distance between two CDFs (based on multivariate
   samples x and y). Special cases include KS Distance and Kantorovich
   Distance.
-- [\*\*Sparse Bayesian Polynomial
-  Chaos:](https://hal.science/hal-01476649/document) An implementation
-  of the algorithm described in Shao et al. (2017)
+- [**Sparse Bayesian Polynomial
+  Chaos**](https://hal.science/hal-01476649/document): An implementation
+  of the algorithm described in Shao et al. (2017). *NOTE:* This
+  functionality has been removed from `quack`. See the [`khaos` R
+  package](https://github.com/knrumsey/khaos) for an updated
+  implementation.
+- [**Conformal Random
+  Forests**](https://link.springer.com/article/10.1007/s10994-014-5453-0):
+  An implementation of RF using the randomForest package. Out of bag
+  trees are used for conformal inference, so no validation set is
+  required. KNN is used for normalization.
 
 ## References
 
