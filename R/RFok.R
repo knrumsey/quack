@@ -103,7 +103,7 @@ predict.rfok <- function(object, newdata, conf=0.95, samples=NULL, ...){
     return(out)
   }else{
     # Generate predictive samples
-    preds <- matrix(NA, nrow=samples, nrow=n)
+    preds <- matrix(NA, nrow=samples, ncol=n)
     for(i in 1:n){
       alpha_delta <- sample(object$alpha, samples, replace=TRUE)
       preds[,i] <- pred[i] + alpha_delta*(mu[i] + object$beta)
