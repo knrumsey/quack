@@ -60,7 +60,7 @@ See [manual](https://github.com/knrumsey/quack/blob/master/quack_0.0.0.9000.pdf)
   - [**Continuous Ranked Probability Scoore**](https://link.springer.com/article/10.1007/s11004-017-9709-7): A class of estimators for CRPS (see Zamo and Naveau 2017).
   - [**CDF Distances**](https://methods.stat.kit.edu/download/doc_secure1/3_StochModels.pdf): Estimators for the distance between two CDFs (based on multivariate samples x and y). Special cases include KS Distance and Kantorovich Distance. 
   - [**Sparse Bayesian Polynomial Chaos**](https://hal.science/hal-01476649/document): An implementation of the algorithm described in Shao et al. (2017). *NOTE:* This functionality has been removed from `quack`. See the [`khaos` R package](https://github.com/knrumsey/khaos) for an updated implementation. 
-  - [**Conformal Random Forests**](https://link.springer.com/article/10.1007/s10994-014-5453-0): An implementation of RF using the randomForest package. Out of bag trees are used for conformal inference, so no validation set is required. KNN is used for normalization. 
+  - [**Conformal Random Forests**](https://link.springer.com/article/10.1007/s10994-014-5453-0): An implementation of RFoK (Johansson et al. (2014)) using the randomForest package. Out of bag trees are used for conformal inference, so no validation set is required. KNN is used for normalization. *NOTE:* This functionality has been removed from `quack`. See the [`conforest` R package](https://github.com/knrumsey/conforest) for an updated implementation. 
   
 ## References
 
@@ -82,5 +82,7 @@ Zamo, M., & Naveau, P. (2018). Estimation of the continuous ranked probability s
 
 Shao, Q., Younes, A., Fahs, M., & Mara, T. A. (2017). Bayesian sparse polynomial chaos expansion for global sensitivity analysis. Computer Methods in Applied Mechanics and Engineering, 318, 474-496.
   
+Johansson, U., Boström, H., Löfström, T., & Linusson, H. (2014). Regression conformal prediction with random forests. Machine learning, 97, 155-176.
   
+Wang, Q., Kulkarni, S. R., & Verdú, S. (2009). Divergence estimation for multidimensional densities via $ k $-Nearest-Neighbor distances. IEEE Transactions on Information Theory, 55(5), 2392-2405.
 

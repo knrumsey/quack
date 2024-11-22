@@ -24,6 +24,9 @@ kld <- function(x, y, type=1, lambda=1/2, n_mc=1){
     return((D1+D2)/2)
   }
   if(type == 3){
+    if(lambda != 1/2){
+      warning("lambda must = 1/2 when type = 3. Set type = 4 if you want to adjust lambda.")
+    }
     lambda <- 1/2
   }
   if(type >= 3){
@@ -34,8 +37,8 @@ kld <- function(x, y, type=1, lambda=1/2, n_mc=1){
     z <- rep(NA, N)
     for(i in 1:n_mc){
       z0 <- sample(c(x, y), size=N,
-                  replace=FALSE,
-                  prob=c(rep(lambda/nx, nx),
+                   replace=FALSE,
+                   prob=c(rep(lambda/nx, nx),
                           rep((1-lambda)/ny, ny)))
       # I don't know why this is needed,
       # but estimator gets weird without it.
@@ -91,7 +94,5 @@ compute_kld <- function(x, y){
   D <- mean(Dx - Dy) - 1
   return(D)
 }
-
-
 
 
