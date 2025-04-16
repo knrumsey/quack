@@ -60,6 +60,15 @@ Gtest <- function(arr, df=NA){
   pvalue <- pchisq(Gstatistic, df = df, lower.tail = FALSE)
 
   # Return object
-  out <- list(G=Gstatistic, pval=pvalue)
+  out <- list(G=Gstatistic, pval=pvalue,
+              observed=observed,
+              expected=expected)
+  class(out) <- "Gtest"
   return(out)
+}
+
+#' @export
+print.Gtest <- function(x, ...){
+  print(paste0("G = ", x$Gstatistic))
+  print(paste0("p = ", x$pval))
 }

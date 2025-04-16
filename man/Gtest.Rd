@@ -24,5 +24,5 @@ data_3d <- array(rpois(2*3*4, lambda=10), dim=c(2,3,4))
 Gtest(data)
 }
 \references{
-Zamo, M., & Naveau, P. (2018). Estimation of the continuous ranked probability score with limited information and applications to ensemble weather forecasts. Mathematical Geosciences, 50(2), 209-234.
+Fill this in.
 }
