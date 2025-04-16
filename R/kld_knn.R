@@ -74,8 +74,6 @@ kld_knn <- function(x, y, automate=TRUE, k=NULL, eps=NULL, whiten=FALSE, type=1,
 }
 
 
-
-
 compute_kld_knn <- function(x, y, automate, k, eps, whiten){
   n <- nrow(x)
   m <- nrow(y)
